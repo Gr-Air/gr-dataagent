@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><text y=%2252%22 font-size=%2252%22>📊</text></svg>">
+  <title>问数智能体流式服务</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <p class="eyebrow">BUSINESS DATA COPILOT</p>
+      <h1>问数智能体流式服务</h1>
+      <p>提交一个经营问题，系统会选择分析方法、执行只读查询，并把结论和证据一起返回。</p>
+    </header>
+    <section class="composer">
+      <textarea id="question" rows="4">对比 2024 年，2025 年 618 的经营增长是否健康？请结合 GMV、净营收、毛利率、退款率、缺货损失和供应履约判断。</textarea>
+      <button id="submit">开始分析</button>
+    </section>
+    <section id="progress" class="panel" hidden>
+      <h2>执行进度</h2>
+      <ol id="events"></ol>
+    </section>
+    <section id="answer" class="panel" hidden>
+      <h2>分析结论</h2>
+      <p id="answerText"></p>
+      <div id="charts" class="charts"></div>
+      <h3>证据引用</h3>
+      <ul id="evidence"></ul>
+      <p id="snapshot" class="meta"></p>
+    </section>
+    <section id="error" class="panel error" hidden></section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

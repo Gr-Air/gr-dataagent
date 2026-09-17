@@ -1,0 +1,33 @@
+.execution:
+  input:
+    subquestion: ${subquestion}
+    repair: ${repair}
+  info:
+    catalog: ${catalog}
+    database: SQLite
+    storage_rule: 金额字段为整数分；SQL 保持原始单位
+  instruct:
+    - 生成一条完整覆盖当前 subquestion 中 metrics、dimensions、time_scope 和比较关系的 SQLite 查询。
+    - 只能使用 catalog 中给定的表和列，只能输出 SELECT 或 WITH 开头的只读单语句。
+    - 需要同比、贡献、占比、排名或变化幅度时，在同一结果中返回计算所需的基期值、当前值和派生指标。
+    - SQL 输出列名必须保留单位语义：金额列及金额差额以 `_cents` 结尾，比率以 `_rate`、`_ratio`、`_share` 或 `_contribution` 结尾，天数以 `_days` 结尾。
+    - “增长来源”计算当前期减基期的绝对增量及其占总增量比例；不得用当前期结构占比代替增长贡献。
+    - “贡献规模”返回当前期金额和该金额占当前期总额的 contribution_rate；不能只返回金额排名。
+    - 热点实体若会在多个父实体中重复出现，按 catalog grain 保留父维度共同分组。例如商品库存热点按 warehouse、product、category 分组。
+    - 同年命名活动与普通时期比较时，活动期使用 campaign_name=活动名，普通时期使用 campaign_name IS NULL，不把其他命名活动混入普通时期。
+    - 供应履约跨月活动覆盖所有触达月份；同比活动压力使用活动前一个月到活动结束月；明确要求前、中、后时分别使用活动前两个月、活动触达月份、活动后两个月。使用 created_month，不按单个活动日切分。
+    - 问题出现命名活动时使用真实 campaign_name；筛选文本只使用 catalog.dimension_values 中的实际值。
+    - 枚举值必须逐字复制 catalog.dimension_values 的实际编码，不自行翻译。例如事件类型使用数据中的编码值。
+    - 所有比例都按 catalog.metrics 中的口径计算；SQLite 除法必须让分子乘 1.0 或 CAST AS REAL，并使用 NULLIF。
+    - 不要使用注释、PRAGMA、系统表、Markdown 代码块或未提供的业务口径。
+    - 如果 repair 不为空，逐条修复预检问题，不改变 subquestion_id。
+  output:
+    $format: json
+    subquestion_id:
+      $type: str
+      $desc: 原样返回子问题标识
+      $ensure: not_null
+    sql:
+      $type: str
+      $desc: 单条 SQLite 只读查询
+      $ensure: not_null

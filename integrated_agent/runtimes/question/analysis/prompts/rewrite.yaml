@@ -1,0 +1,94 @@
+.execution:
+  input:
+    question: ${question}
+  info:
+    catalog: ${catalog}
+  instruct:
+    - 第一步把原问题中的每一项并列要求写成 requirements；指标、维度、时间范围和比较关系不得省略。
+    - 第二步把 requirements 分配给 targets。每个 requirement_id 必须至少被一个 target 引用，target 必须完整复制所引用 requirement 的指标、维度、时间和比较关系。
+    - 共享同一事实表、过滤条件和结果粒度的目标可以合并；需要不同事实表、过滤条件或粒度时分别建立 target。
+    - 整体指标、贡献拆分、缺货或库存、供应履约属于不同证据目标；原问题出现哪类目标就保留哪类，不按固定数量补目标。
+    - “增长”“增长来源”“同比”“是否健康”都需要可比较基线；问题只写当前年份时，也要加入上一可比年份，增长来源计算当前值减基期值，不用当前年份占比代替增长贡献。
+    - “贡献规模”同时包含当前期金额和占当前期总额的贡献率；“增长来源”包含增量金额和占总增量的贡献率，两者不得混用。
+    - 综合判断题逐项保留问题点名的财务、渠道、品类、城市、库存、供应商等对象；不得把跨域问题缩成单年总量。
+    - 同时要求上层汇总和下层热点时，下层 target 保留定位实体所需的父维度。例如商品热点同时保留 warehouse、product、category，避免跨仓库相加后改变热点定义。
+    - 同年命名活动与普通时期比较时，活动期使用 campaign_name=活动名，普通时期使用 campaign_name IS NULL，不把其他命名活动混入普通时期。
+    - 供应履约比较按月建立可解释窗口：跨月活动覆盖所有触达月份；同比活动压力使用活动前一个月到活动结束月；明确要求前、中、后时分别使用活动前两个月、活动触达月份、活动后两个月。
+    - 枚举值必须原样使用 catalog.dimension_values 中的真实值，不把英文编码翻译成中文筛选值。
+    - target_id 和 requirement_id 使用简短稳定的英文短横线标识；输出前逐句回读原问题，确认每项要求都进入 requirements 并被 target 覆盖。
+    - 只做问题改写和拆解，不生成 SQL，不提供经营结论。
+  output:
+    $format: json
+    normalized_question:
+      $type: str
+      $desc: 保留全部分析目标、时间和比较关系的改写
+      $ensure: not_null
+    requirements:
+      $type:
+        - requirement_id:
+            $type: str
+            $desc: 稳定英文要求标识
+            $ensure: not_null
+          description:
+            $type: str
+            $desc: 原问题中的一项独立要求
+            $ensure: not_null
+          metrics:
+            $type:
+              - $type: str
+            $desc: 该要求涉及的全部指标
+            $ensure: not_null
+          dimensions:
+            $type:
+              - $type: str
+            $desc: 该要求涉及的维度
+          time_scopes:
+            $type:
+              - $type: str
+            $desc: 明确时间范围
+            $ensure: not_null
+          comparisons:
+            $type:
+              - $type: str
+            $desc: 比较、排名、贡献或诊断关系
+            $ensure: not_null
+      $ensure: not_null
+    targets:
+      $type:
+        - target_id:
+            $type: str
+            $desc: 稳定英文标识
+            $ensure: not_null
+          requirement_ids:
+            $type:
+              - $type: str
+            $desc: 当前 target 覆盖的 requirement_id
+            $ensure: not_null
+          goal:
+            $type: str
+            $desc: 当前证据要支持的分析目标
+            $ensure: not_null
+          question:
+            $type: str
+            $desc: 可独立查询的问题
+            $ensure: not_null
+          metrics:
+            $type:
+              - $type: str
+            $desc: 需要的指标名
+            $ensure: not_null
+          dimensions:
+            $type:
+              - $type: str
+            $desc: 分组或过滤维度
+          time_scopes:
+            $type:
+              - $type: str
+            $desc: 明确时间范围
+            $ensure: not_null
+          comparisons:
+            $type:
+              - $type: str
+            $desc: 比较、排名或贡献关系
+            $ensure: not_null
+      $ensure: not_null

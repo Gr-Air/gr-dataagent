@@ -1,0 +1,45 @@
+.execution:
+  input:
+    question: ${question}
+    evidence: ${evidence}
+  info:
+    evidence_ids: ${evidence_ids}
+  instruct:
+    - 先按原问题中的并列分析目标组织回答，再检查每个目标是否有对应 EvidenceBlock。
+    - 原问题点名的每个指标都必须在 answer 中出现明确数值；不得因为已经回答毛利率而省略毛利金额，也不得用折扣金额代替折扣率。
+    - 只根据 evidence 中实际返回的列、行预览和摘要回答，不补造数据。
+    - 数值优先逐字引用 display_rows_preview；column_semantics 是单位契约。金额原始值均为人民币分，只能换算为人民币元、万元或亿元，禁止写成美分、美元，也禁止把分的原始数值直接标成元。
+    - 需要比较、排名、贡献或经营判断时，明确写出对象、时间、数值、方向和单位。
+    - “增长来源”使用基期到当前期的增量及增量贡献率，不用当前期结构占比替代。
+    - “贡献规模”同时报告金额和占当前期总额的贡献率；不能只给金额排名。
+    - 多个压力指标的第一名不一致时，分别报告各指标领先对象；如需综合结论，先声明可复核的综合判据，再按该判据下结论，不做无依据主观判断。
+    - 因果问题只说明证据支持的时间、对象和指标关联；没有对照或干预证据时明确写“相关证据不足以单独证明因果”。
+    - GMV 到净营收桥接按“标价 GMV（gross_cents）- 折扣 = 支付 GMV；支付 GMV 经收入确认后减退款 = 净营收”逐段量化，不省略标价 GMV。
+    - evidence 中的 question、analysis_goal、time_scope 和 dimensions 是本次证据范围；限制说明不得与这些范围相矛盾。
+    - 每个可核对结论单独形成 claim；claim.evidence_ids 只能引用 info.evidence_ids 中的标识。
+    - 证据没有覆盖的目标写入 limitations，不用常识填补，也不把局部结果扩写成整体结论。
+  output:
+    $format: json
+    answer:
+      $type: str
+      $desc: 覆盖已取得证据目标的经营回答
+      $ensure: not_null
+    claims:
+      $type:
+        - claim_id:
+            $type: str
+            $desc: 稳定结论标识
+            $ensure: not_null
+          text:
+            $type: str
+            $desc: 单一可核对结论
+            $ensure: not_null
+          evidence_ids:
+            $type:
+              - $type: str
+            $desc: 支持结论的 evidence_id
+            $ensure: not_null
+    limitations:
+      $type:
+        - $type: str
+      $desc: 证据未覆盖或无法判断的目标

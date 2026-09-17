@@ -1,0 +1,24 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pyright/
+.agently/
+.DS_Store
+
+workspace/
+logs/
+load_test_results/
+
+# 实际数据文件
+data/
+*.sqlite
+*.sqlite3
+*.db
+
+# 上传文件
+uploads/
+
+*.log
+*.tmp

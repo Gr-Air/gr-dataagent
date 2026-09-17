@@ -1,0 +1,31 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f3f7f6;
+  color: #16312c;
+}
+body { margin: 0; }
+.shell { max-width: 900px; margin: 0 auto; padding: 64px 24px; }
+header { margin-bottom: 28px; }
+.eyebrow { color: #167d6a; font-size: 12px; font-weight: 800; letter-spacing: .16em; }
+h1 { font-size: clamp(34px, 6vw, 58px); margin: 8px 0 12px; line-height: 1.05; }
+header > p:last-child { max-width: 680px; color: #526b66; line-height: 1.7; }
+.composer, .panel { background: #fff; border: 1px solid #dbe8e5; border-radius: 20px; padding: 20px; box-shadow: 0 14px 40px rgba(31, 76, 67, .08); }
+.composer { display: grid; gap: 14px; }
+textarea { border: 0; resize: vertical; font: inherit; line-height: 1.7; outline: none; color: inherit; }
+button { justify-self: end; border: 0; border-radius: 999px; padding: 12px 22px; background: #167d6a; color: white; font-weight: 700; cursor: pointer; }
+button:disabled { opacity: .55; cursor: wait; }
+.panel { margin-top: 18px; }
+#events { color: #526b66; line-height: 1.8; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips span { background: #e8f5f1; color: #126b5b; border-radius: 999px; padding: 6px 10px; font-size: 13px; }
+.meta { color: #728782; font-size: 13px; }
+.error { border-color: #f3c5c5; color: #9f2f2f; }
+.charts { display: grid; gap: 16px; margin: 22px 0; }
+.chart-card { border: 1px solid #dbe8e5; border-radius: 16px; padding: 16px; overflow: hidden; }
+.chart-card h3 { margin: 0 0 4px; }
+.chart-meta { color: #728782; font-size: 12px; margin: 0 0 12px; }
+.chart-card svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; font-size: 12px; color: #526b66; }
+.chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.chart-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }

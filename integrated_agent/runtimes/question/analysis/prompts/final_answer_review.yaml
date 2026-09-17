@@ -1,0 +1,38 @@
+.execution:
+  input:
+    question: ${question}
+    evidence: ${evidence}
+    draft_answer: ${draft_answer}
+  info:
+    evidence_ids: ${evidence_ids}
+  instruct:
+    - 逐项复核 draft_answer，输出修订后的完整最终回答；不要评价草稿，也不要解释修改过程。
+    - 原问题点名的每个指标、比较和判断都必须出现；每个数值逐字对照 evidence.display_rows_preview，删除证据中不存在的派生值。
+    - 金额使用人民币元、万元或亿元；比例列是0到1的小数，展示为百分比；rate_change、rate_diff、margin_change 使用百分点。
+    - 排名按 evidence 中的数值重新核对。多个指标第一名不一致时分别说明，不强行合并。
+    - 活动、年度、月份和维度范围以 evidence.question、time_scope、dimensions 为准，不得声称证据缺少已经明确存在的范围。
+    - “贡献规模”同时写金额和当前期贡献率；“增长来源”同时写增量和增量贡献率。
+    - GMV桥接必须从gross_cents开始，依次说明折扣、paid_gmv、recognized_revenue、refund和net_revenue。
+    - 因果结论保持证据边界；证据不足项写入limitations。没有额外不足时，写明结论适用的数据快照与范围。
+    - claims中的每条结论只引用info.evidence_ids中的标识。
+  output:
+    $format: json
+    answer:
+      $type: str
+      $desc: 经证据逐项复核后的完整经营回答
+      $ensure: not_null
+    claims:
+      $type:
+        - claim_id:
+            $type: str
+            $ensure: not_null
+          text:
+            $type: str
+            $ensure: not_null
+          evidence_ids:
+            $type:
+              - $type: str
+            $ensure: not_null
+    limitations:
+      $type:
+        - $type: str
