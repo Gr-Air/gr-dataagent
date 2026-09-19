@@ -57,7 +57,7 @@ async def generate_sql(data: TriggerFlowRuntimeData) -> dict[str, Any]:
     for attempt_index in (1, 2):
         try:
             result = await (
-                Agently.create_agent(name=f"lesson24-v2-sql-{subquestion_id}")
+                Agently.create_agent(name=f"question-analysis-sql-{subquestion_id}")
                 .load_yaml_prompt(
                     PROMPT_PATH,
                     mappings={

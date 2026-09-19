@@ -77,7 +77,7 @@ async def compose_final_answer(data: TriggerFlowRuntimeData) -> dict[str, Any]:
     final_error: BaseException | None = None
     try:
         result = await (
-            Agently.create_agent(name="lesson24-v2-final")
+            Agently.create_agent(name="question-analysis-final")
             .load_yaml_prompt(
                 PROMPT_PATH,
                 mappings={
@@ -95,7 +95,7 @@ async def compose_final_answer(data: TriggerFlowRuntimeData) -> dict[str, Any]:
         draft_answer = dict(result)
         try:
             reviewed = await (
-                Agently.create_agent(name="lesson24-v2-final-review")
+                Agently.create_agent(name="question-analysis-final-review")
                 .load_yaml_prompt(
                     REVIEW_PROMPT_PATH,
                     mappings={

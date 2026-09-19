@@ -323,7 +323,7 @@ def _record_framework_event(trace: TraceLog, event: RuntimeEvent) -> None:
 def register_framework_hook(trace: TraceLog) -> str:
     """为一次 execution 注册严格白名单 Hook。"""
 
-    hook_name = f"lesson24-v2.trace.{trace.execution_id}"
+    hook_name = f"question-analysis.trace.{trace.execution_id}"
 
     def capture(event: RuntimeEvent) -> None:
         _record_framework_event(trace, event)
