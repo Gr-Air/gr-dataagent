@@ -19,8 +19,8 @@ from .chunks.normalize import normalize_results
 from .chunks.rewrite import rewrite_question
 
 
-PIPELINE_VERSION = "lesson24-v2-2.5.0"
-PROMPT_VERSION = "3.5.0"
+PIPELINE_VERSION = "question-analysis-v2-1.0.0"
+PROMPT_VERSION = "1.0.0"
 
 QUESTION_DATA_FLOW = TriggerFlow(name="question-data-v2")
 (

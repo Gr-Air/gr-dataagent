@@ -213,7 +213,7 @@ async def rewrite_question(data: TriggerFlowRuntimeData) -> list[dict[str, Any]]
 
     try:
         result = await (
-            Agently.create_agent(name="lesson24-v2-rewrite")
+            Agently.create_agent(name="question-analysis-rewrite")
             .load_yaml_prompt(
                 PROMPT_PATH,
                 mappings={
